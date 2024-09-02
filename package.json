@@ -1,0 +1,23 @@
+{
+  "name": "video_streaming_app",
+  "version": "1.0.0",
+  "description": "Backend for video streaming app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Praanshu98/video_streaming_app.git"
+  },
+  "keywords": [
+    "javascript",
+    "node"
+  ],
+  "author": "Praanshu Grover",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Praanshu98/video_streaming_app/issues"
+  },
+  "homepage": "https://github.com/Praanshu98/video_streaming_app#readme"
+}
