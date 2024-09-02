@@ -2,9 +2,10 @@
   "name": "video_streaming_app",
   "version": "1.0.0",
   "description": "Backend for video streaming app",
-  "main": "index.js",
+  "type": "module",
+  "main": "/src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/Praanshu98/video_streaming_app/issues"
   },
-  "homepage": "https://github.com/Praanshu98/video_streaming_app#readme"
+  "homepage": "https://github.com/Praanshu98/video_streaming_app#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
 }
