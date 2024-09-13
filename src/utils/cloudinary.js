@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
+// import fs from "fs";
+import unlinkFile from "./unlinkFile.js";
 
 // Configuration
 cloudinary.config({
@@ -20,11 +21,13 @@ const uploadToCloudinary = async (localFilePath) => {
     // console.log("File Uploaded successfully");
     // console.log("uploadResult: ", uploadResult);
     // console.log(uploadResult.url);
-    fs.unlinkSync(localFilePath);
+    unlinkFile(localFilePath);
+    // fs.unlinkSync(localFilePath);
     return uploadResult;
   } catch (error) {
     console.error("Some error occurred: \n", error);
-    fs.unlinkSync(localFilePath); // remove the locally saved temporary file
+    unlinkFile(localFilePath);
+    // fs.unlinkSync(localFilePath); // remove the locally saved temporary file
     return null;
   }
 };
