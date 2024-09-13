@@ -27,11 +27,11 @@ const userSchema = new Schema(
       index: true,
     },
     avatar: {
-      type: String,
+      type: String, // image url
       required: true,
     },
     coverImage: {
-      type: String,
+      type: String, // image url
     },
     watchHistory: [
       {
@@ -40,7 +40,7 @@ const userSchema = new Schema(
       },
     ],
     password: {
-      type: String,
+      type: String, // Encrypted password with bcrypt
       required: [true, "Password is required!"],
     },
     refreshTokens: {
@@ -52,12 +52,14 @@ const userSchema = new Schema(
   }
 );
 
+// function runs before every user creation
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = bcrypt.hash(this.password, 10);
   next();
 });
 
+// Custom method to check password
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
