@@ -17,8 +17,10 @@ const uploadToCloudinary = async (localFilePath) => {
       resource_type: "auto",
     });
 
-    console.log("File Uploaded successfully");
-    console.log(uploadResult.url);
+    // console.log("File Uploaded successfully");
+    // console.log("uploadResult: ", uploadResult);
+    // console.log(uploadResult.url);
+    fs.unlinkSync(localFilePath);
     return uploadResult;
   } catch (error) {
     console.error("Some error occurred: \n", error);
@@ -26,3 +28,5 @@ const uploadToCloudinary = async (localFilePath) => {
     return null;
   }
 };
+
+export { uploadToCloudinary };
