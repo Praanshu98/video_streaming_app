@@ -64,6 +64,11 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
+//   Refresh token              vs                  Access Token
+// -  Expire in long term                          Expire in short term
+// -  Stored in Db                                 Stored in cookies?
+// -  While accessing page match user's access token with one in db, if matches issue new Access Token.
+
 userSchema.methods.generateAccessToken = function () {
   jwt.sign(
     {
