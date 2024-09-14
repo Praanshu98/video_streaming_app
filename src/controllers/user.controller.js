@@ -42,7 +42,6 @@ const registerUser = asyncHandler(async (req, res) => {
   // Return response
 
   const { userName, email, fullName, password } = req.body;
-  // console.log({ userName, email, fullName, password });
 
   if (
     [userName, email, fullName, password].some((field) => field?.trim() === "")
@@ -54,12 +53,8 @@ const registerUser = asyncHandler(async (req, res) => {
     $or: [{ userName }, { email }],
   });
 
-  console.log(req.files);
-
   const deleteUploadedFiles = (files) => {
-    console.log(typeof files);
     Object.values(files).forEach((file) => {
-      // console.log(file[0].path);
       unlinkFile(file[0].path);
     });
   };
@@ -72,7 +67,6 @@ const registerUser = asyncHandler(async (req, res) => {
     );
   }
 
-  // console.log("req.files: ", req.files);
   const avatarLocalPath = req.files?.avatar[0]?.path;
   // const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
