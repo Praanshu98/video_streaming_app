@@ -43,7 +43,7 @@ const userSchema = new Schema(
       type: String, // Encrypted password with bcrypt
       required: [true, "Password is required!"],
     },
-    refreshTokens: {
+    refreshToken: {
       type: String,
     },
   },
@@ -70,7 +70,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 // -  While accessing page match user's access token with one in db, if matches issue new Access Token.
 
 userSchema.methods.generateAccessToken = function () {
-  jwt.sign(
+  return jwt.sign(
     {
       _id: this._id,
       email: this.email,
@@ -85,7 +85,7 @@ userSchema.methods.generateAccessToken = function () {
 };
 
 userSchema.methods.generateRefreshToken = function () {
-  jwt.sign(
+  return jwt.sign(
     {
       _id: this._id,
     },
