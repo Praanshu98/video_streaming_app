@@ -339,14 +339,14 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 const getUserChannelProfile = asyncHandler(async (req, res) => {
   const { userName } = req.params;
 
-  if (userName?.trim()) throw new ApiError(400, "username is missing");
+  if (!userName?.trim()) throw new ApiError(400, "username is missing");
 
   // Channel object
-  const channel = User.aggregate([
+  const channel = await User.aggregate([
     {
       // Match the user from database
       $match: {
-        userName: userName,
+        userName: userName?.toLowerCase(),
       },
     },
     {
@@ -375,7 +375,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         },
         // Count Number of channels has subscribed to
         channelSubscribedToCount: {
-          $size: "$subscribedTo",
+          $size: "$subscribed_to",
         },
         // Check if user has subscribed to the current channel
         idSubscribed: {
@@ -400,7 +400,6 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
       },
     },
   ]);
-  console.log("-------------- channel --------------", channel);
 
   if (!channel?.length) throw new ApiError(404, "Channel does not exist.");
 
