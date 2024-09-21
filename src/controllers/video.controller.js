@@ -7,8 +7,71 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  //TODO: get all videos based on query, sort, pagination
+  const {
+    page = 1,
+    limit = 10,
+    query,
+    sortBy,
+    sortType = "desc",
+    userId = req.user._id,
+  } = req.query;
+
+  // Check if userId is valid
+  if (userId && !isValidObjectId(userId)) {
+    throw new ApiError(400, "Invalid user id");
+  }
+
+  // Get all videos of logged in user
+  const videos = await Video.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "ownerData",
+        pipeline: [
+          {
+            $project: {
+              username: 1,
+              fullName: 1,
+              email: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        ownerData: {
+          $arrayElemAt: ["$ownerData", 0],
+        },
+      },
+    },
+    {
+      $match: {
+        "ownerData._id": new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $sort: {
+        [sortBy]: sortType === "desc" ? -1 : 1,
+      },
+    },
+    {
+      $skip: (Number(page) - 1) * Number(limit),
+    },
+    {
+      $limit: Number(limit),
+    },
+  ]);
+
+  if (!videos) {
+    throw new ApiError(500, "Something went wrong while getting videos");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, videos, "Videos fetched successfully"));
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
