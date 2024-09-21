@@ -74,7 +74,57 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  //TODO: update video details like title, description, thumbnail
+  const { title, description } = req.body;
+
+  // Check if videoId is valid
+  if (!isValidObjectId(videoId)) {
+    throw new ApiError(400, "Invalid video id");
+  }
+
+  // Check if title, description, and videoId are empty
+  if ([title, description].some((field) => field?.trim() === "")) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  const thumbnailLocalPath = req.file?.path;
+
+  // Check if thumbnail is empty
+  if (!thumbnailLocalPath) {
+    throw new ApiError(400, "Thumbnail file is required");
+  }
+
+  // Check if video exists
+  const video = await Video.findById(videoId);
+
+  if (!video) throw new ApiError(404, "Video does not exist");
+
+  // Upload to cloudinary
+  const thumbnailCloudinary = await uploadToCloudinary(thumbnailLocalPath);
+
+  if (!thumbnailCloudinary.secure_url) {
+    throw new ApiError(400, "Error while uploading thumbnail to cloudinary");
+  }
+
+  // Update video
+  const updatedVideo = await Video.findOneAndUpdate(
+    new mongoose.Types.ObjectId(videoId),
+    {
+      $set: {
+        title,
+        description,
+        thumbnail: thumbnailCloudinary.secure_url,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedVideo) {
+    throw new ApiError(500, "Something went wrong while updating video");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedVideo, "Video updated successfully"));
 });
 
 const deleteVideo = asyncHandler(async (req, res) => {
