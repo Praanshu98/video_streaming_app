@@ -13,7 +13,7 @@ const playlistSchema = new Schema(
     videos: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Videos",
+        ref: "Video",
       },
     ],
     owner: {
@@ -21,9 +21,7 @@ const playlistSchema = new Schema(
       ref: "User",
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 export const Playlist = mongoose.model("Playlist", playlistSchema);
