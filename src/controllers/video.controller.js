@@ -129,7 +129,21 @@ const updateVideo = asyncHandler(async (req, res) => {
 
 const deleteVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  //TODO: delete video
+
+  // Check if videoId is valid
+  if (!isValidObjectId(videoId)) throw new ApiError(400, "Video id is invalid");
+
+  // Check if video exists
+  const video = await Video.findById(videoId);
+
+  if (!video) throw new ApiError(404, "Video does not exist");
+
+  // Delete video
+  const deletedVideo = await Video.findByIdAndDelete(videoId);
+
+  if (!deletedVideo) {
+    throw new ApiError(500, "Something went wrong while deleting video");
+  }
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
