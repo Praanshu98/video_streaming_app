@@ -1,6 +1,6 @@
 # Video Streaming App
 
-A full-featured video streaming application that allows users to upload, stream, and interact with videos in real-time.
+A full-featured backend for video streaming application that allows users to upload, and interact with videos in real-time.
 
 ## **Model Link**
 
